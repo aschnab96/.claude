@@ -33,6 +33,15 @@ cd <project-name>
 git init
 ```
 
+**Checkpoint:** After running git init, confirm success with the user
+before continuing. Run:
+```bash
+git status
+```
+Show the output to the user and wait for confirmation. The initial commit
+happens at Step 10 only — after all files are created. Do not commit anything
+before Step 10.
+
 ### 4. Create .gitignore
 Include at minimum:
 - `.env`
