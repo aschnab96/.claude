@@ -59,6 +59,16 @@ folder/*
 ```
 Never add a folder path directly to .gitignore if you want to track its structure in git.
 
+For nested folders inside ignored directories, you must also negate the
+subdirectory itself so git can traverse into it:
+```
+imports/*
+!imports/.gitkeep
+!imports/processed/
+imports/processed/*
+!imports/processed/.gitkeep
+```
+
 ### 5. Create Python venv if Python project
 ```bash
 python3 -m venv venv
