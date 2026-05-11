@@ -85,9 +85,33 @@ git -C <project-name> add .
 git -C <project-name> commit -m "feat: scaffold <project-name> project structure"
 ```
 
+### 9. Create GitHub remote and push
+Check that the GitHub CLI is available:
+```bash
+gh --version
+```
+If not found, tell the user to install it and skip the rest of this step.
+
+Ask the user: should the repo be public or private? Recommend private for
+anything containing personal data, credentials, or sensitive configuration.
+
+Create the remote and push in one command:
+```bash
+gh repo create <project-name> --private --source=. --remote=origin --push
+# or --public if the user chose public
+```
+
+Confirm success:
+```bash
+git log --oneline
+git remote -v
+```
+Show both outputs to the user.
+
 ## Hard rules
 - Never create a project without a .gitignore
 - Never skip CLAUDE.md — it's the model's entry point
 - Never put credentials in any tracked file
 - Never commit before Step 8 — all files must exist first
 - Always confirm the structure with the user before the initial commit
+- Never end scaffold with an unconnected local repo — always push to GitHub before closing
