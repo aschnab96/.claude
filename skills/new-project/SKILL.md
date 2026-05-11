@@ -1,7 +1,7 @@
 ---
 name: new-project
 description: Scaffold a new project from scratch with the correct structure, config files, and Claude setup. Run at the start of any new project before writing any code.
-allowed-tools: Bash(mkdir *), Bash(git *), Bash(touch *), Bash(python *), Bash(echo *), Read
+allowed-tools: Bash(mkdir *), Bash(git *), Bash(touch *), Bash(python *), Read
 ---
 
 # New Project — Scaffold From Scratch
@@ -14,93 +14,80 @@ Ask the user:
 - What type? (web app / script / bot / library)
 - What language/stack? (Python / JS / other)
 - Will it run on a server or locally?
+- Does it have a database?
 
 Do not create anything until these are answered.
 
-### 2. Create directory structure
+### 2. Create folders + .gitignore
 ```bash
 mkdir -p <project-name>/.claude/skills
-mkdir -p <project-name>/.claude/hooks
 mkdir -p <project-name>/.claude/rules
 mkdir -p <project-name>/docs
 mkdir -p <project-name>/tests
 mkdir -p <project-name>/scripts
+git -C <project-name> init
 ```
 
-### 3. Initialize git
-```bash
-cd <project-name>
-git init
-```
-
-**Checkpoint:** After running git init, confirm success with the user
-before continuing. Run:
-```bash
-git status
-```
-Show the output to the user and wait for confirmation. The initial commit
-happens at Step 10 only — after all files are created. Do not commit anything
-before Step 10.
-
-### 4. Create .gitignore
-Include at minimum:
+Create `.gitignore` with at minimum:
 - `.env`
-- `venv/`
 - `__pycache__/`
 - `*.pyc`
 - `*.db`
 - `*.log`
 - Any key or credential files
 
-For any data import or upload folders, use selective ignore to track folder structure but not contents:
+For any data import or upload folders where you want to track folder structure
+but not contents, use selective ignore with `.gitkeep`:
 ```
 folder/*
 !folder/.gitkeep
 ```
-Never add a folder path directly to .gitignore if you want to track its structure in git.
+Never add a folder path directly to .gitignore if you want to track its
+structure in git.
 
-For nested folders inside ignored directories, you must also negate the
-subdirectory itself so git can traverse into it:
-```
-imports/*
-!imports/.gitkeep
-!imports/processed/
-imports/processed/*
-!imports/processed/.gitkeep
-```
-
-### 5. Create Python venv if Python project
+If Python project, create a virtual environment:
 ```bash
-python3 -m venv venv
+python3 -m venv <project-name>/venv
+```
+And add `venv/` to `.gitignore`.
+
+### 3. Create CLAUDE.md
+Place at the project root. Include:
+- Project overview (one paragraph)
+- Sensitive files list (never read, display, or commit)
+- Session start instructions
+- References section pointing to docs/
+
+### 4. Create docs/SCHEMA.md
+**Only if the project has a database** (wired to the "does it have a DB?"
+answer from Step 1). Leave as a starter stub with table/column placeholders.
+Skip entirely for non-database projects.
+
+### 5. Create .claude/rules/
+Add a project-specific rules file (e.g. `<project-name>.md`) covering:
+- File and folder conventions
+- Any tools or commands that must/must not be used
+- Any security-sensitive paths
+
+### 6. Copy skillify into .claude/skills/
+```bash
+cp ~/.claude/skills/skillify/SKILL.md <project-name>/.claude/skills/skillify/SKILL.md
 ```
 
-### 6. Create docs/
-Create these files with starter content:
-- `CLAUDE.md` — project overview, file structure pointer, 
-  session start instructions, sensitive files list
-- `docs/MODULE_MAP.md` — empty groups A-I ready to fill
-- `docs/BACKLOG.md` — empty, ready for tasks
-- `docs/SCHEMA.md` — empty if DB project, skip if not
+### 7. Create docs/MODULE_MAP.md
+Stub with labelled groups (A through I or however many make sense) ready to
+fill in as the codebase grows.
 
-### 7. Copy global hooks
-Copy protect-sensitive-files.sh from ~/.claude/hooks if it exists.
-Adapt for this project's sensitive files.
-
-### 8. Create settings.json
-Basic `.claude/settings.json` with hook configuration for 
-PreToolUse file protection.
-
-### 9. Create skillify skill
-Copy `~/.claude/skills/skillify/SKILL.md` into 
-`.claude/skills/skillify/SKILL.md` and update any 
-project-specific paths.
-
-### 10. Initial commit
-Stage everything and commit:
-`feat: scaffold <project-name> project structure`
+### 8. Initial commit
+Confirm the full structure with the user, then:
+```bash
+git -C <project-name> add .
+git -C <project-name> commit -m "feat: scaffold <project-name> project structure"
+```
 
 ## Hard rules
 - Never create a project without a .gitignore
 - Never skip CLAUDE.md — it's the model's entry point
 - Never put credentials in any tracked file
+- Never commit before Step 8 — all files must exist first
 - Always confirm the structure with the user before the initial commit
