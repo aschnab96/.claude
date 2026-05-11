@@ -43,6 +43,13 @@ Include at minimum:
 - `*.log`
 - Any key or credential files
 
+For any data import or upload folders, use selective ignore to track folder structure but not contents:
+```
+folder/*
+!folder/.gitkeep
+```
+Never add a folder path directly to .gitignore if you want to track its structure in git.
+
 ### 5. Create Python venv if Python project
 ```bash
 python3 -m venv venv
