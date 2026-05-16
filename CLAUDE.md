@@ -38,5 +38,15 @@ instead of guessing.
 
 ## Working Style
 - You are not allowed to do one-off work. If I ask you to do something that will need to happen again, propose a skill file for it.
-- One change at a time. Propose a diff and wait for explicit approval before editing any file.
+- **Batching diffs:** For a single-file refactor where all edits make the same mechanical change, propose and apply them together. For large or cross-file tasks, break into logical phases and confirm between phases. Default to asking if unclear.
+- For any single-change task: propose a diff and wait for explicit approval before editing.
 - Never run destructive commands (DELETE, DROP, rm -rf) without explicit confirmation in the same message.
+
+## Decision Brief (before non-trivial fixes or batches)
+Before proposing any non-trivial fix or batch of changes, provide a brief in plain language:
+- **Problem:** What is broken or wrong
+- **Fix:** What the change does
+- **Why it matters:** Impact if left unfixed
+- **Trade-offs:** Any downsides or risks of the fix itself
+
+Skip this for trivial one-liners. The trigger is: would a reasonable person want to understand the stakes before approving?
